@@ -1,19 +1,31 @@
+# nixpacks.toml
+
 [phases.setup]
-nixPkgs = ["nodejs_20.npm"]
-nixOverlays = ["https://github.com/railwayapp/nix-npm-overlay/archive/main.tar.gz"]
-nixpkgsUrl = "https://github.com/NixOS/nixpkgs/archive/nixos-23.11.tar.gz"
+# Utilise un seul paquet Nix stable pour Node.js.
+# Pas besoin d'overlay, ce qui réduit les risques d'incompatibilité.
+nixPkgs = ["nodejs_20"]
+# On peut retirer nixpkgsUrl pour utiliser la version par défaut de Nixpacks,
+# ou la conserver pour une reproductibilité absolue.
+# nixpkgsUrl = "https://github.com/NixOS/nixpkgs/archive/nixos-23.11.tar.gz"
 
 [phases.install]
+# La commande 'npm ci' est la meilleure pratique pour les builds CI/CD
+# car elle garantit que les dépendances sont installées de manière reproductible
+# en se basant sur package-lock.json.
 cmds = ["npm ci"]
 
 [phases.build]
+# Simplification des commandes de build. 
+# Utilise un seul bundler si possible. Par exemple, si Vite est ton bundler principal,
+# il est probablement capable de gérer à la fois le client et le serveur.
 cmds = [
-  "npx vite build",
-  "npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist --minify"
+  "npm run build"
 ]
 
 [start]
+# Assure-toi que cette commande est définie dans ton 'package.json'.
 cmd = "npm start"
 
 [variables]
+# Déclare les variables d'environnement de manière claire.
 NODE_ENV = "production"
