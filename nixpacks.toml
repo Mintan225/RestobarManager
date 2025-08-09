@@ -1,0 +1,24 @@
+[phases.setup]
+# Use a single, standard package. npm is already included with nodejs_20.
+nixPkgs = ["nodejs_20"]
+
+# Remove the problematic overlay to rely on standard NixOS packages.
+# nixOverlays = ["https://github.com/railwayapp/nix-npm-overlay/archive/main.tar.gz"]
+
+# It's good to keep this for a pinned, reproducible version of nixpkgs.
+nixpkgsUrl = "https://github.com/NixOS/nixpkgs/archive/nixos-23.11.tar.gz"
+
+[phases.install]
+cmds = ["npm ci"]
+
+[phases.build]
+cmds = [
+  "npx vite build",
+  "npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist --minify"
+]
+
+[start]
+cmd = "npm start"
+
+[variables]
+NODE_ENV = "production"
