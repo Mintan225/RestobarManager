@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ["nodejs_20.pkgs.npm"]
+nixPkgs = ["nodejs_20.npm"]
 nixOverlays = ["https://github.com/railwayapp/nix-npm-overlay/archive/main.tar.gz"]
 nixpkgsUrl = "https://github.com/NixOS/nixpkgs/archive/nixos-23.11.tar.gz"
 
